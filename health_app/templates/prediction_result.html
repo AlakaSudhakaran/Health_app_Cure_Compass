@@ -5,26 +5,116 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/prediction_result.css' %}">
     <style>
-        #chatbot-container {
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        #chat-messages {
-            height: 200px;
-            overflow-y: scroll;
-            margin-bottom: 10px;
-            border: 1px solid #eee;
-            padding: 10px;
-        }
-        #user-input {
-            width: 80%;
-            padding: 5px;
-        }
-    </style>
+    /* Chatbot container */
+#chatbot-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 36px auto;
+    padding: 20px;
+    background-color:rgb(144, 184, 177); /* Matching teal background */
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 128, 128, 0.2); /* Soft shadow */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+}
+
+/* Header text */
+#chatbot-container h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 22px; /* Slightly larger for consistency */
+    color: white;
+    border-bottom: 2px solid #004d40; /* Dark teal underline */
+    padding-bottom: 10px;
+}
+
+/* Chat messages area */
+#chat-messages {
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #e0f4f3; /* Light teal */
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 14px;
+    border: 2px solid #004d40; /* Dark teal border */
+}
+
+/* Bot and user messages */
+#chat-messages p {
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    word-wrap: break-word;
+    line-height: 1.4;
+    background-color: #e0f7fa; /* Soft teal for bot responses */
+    color: #004d4d;
+    box-shadow: 0 2px 5px rgba(0, 128, 128, 0.1);
+}
+
+#chat-messages p.user-message {
+    background-color: #004d4d; /* Darker teal for user messages */
+    color: white;
+    text-align: right;
+}
+
+/* Input field */
+#user-input {
+    width: calc(100% - 22px);
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #004d4d;
+    background-color: #b2dfdb; /* Teal shade for input */
+    margin-bottom: 10px;
+}
+
+/* Send button */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #05423b; /* Matching teal */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #004d40; /* Darker teal on hover */
+}
+
+/* Scrollbar customization */
+#chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background-color: #00796b;
+    border-radius: 10px;
+}
+
+#chat-messages::-webkit-scrollbar-track {
+    background-color: #e0f7f7;
+}
+footer  {
+    position: relative;
+    color: black;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    
+}
+
+</style>
+
 </head>
 <body>
     <div class="container">
@@ -39,16 +129,14 @@
             {% endfor %}
         </ul>
         <a href="{% url 'report_symptoms' %}">Back to reporting symptoms</a>
+        <a href="{% url 'home' %}">Back to Home</a></a>
+        <hr>
+        <a href="#chatbot-container" class="personalized-button">Dear {{ user.username }}! ,kindly provide the answers to the Dr. CURE bot questions</a>
     </div>
-
     <!-- Chatbot Interface -->
     <div id="chatbot-container">
-        <h3>Follow-up Questions</h3>
-        <div id="chat-messages"></div>
-        <input type="text" id="user-input" placeholder="Type your answer here...">
-        <button onclick="sendMessage()">Send</button>
-    </div>
-
+        <h3>Dr. CURE Bot</h3>
+        
    
 <!DOCTYPE html>
 <html lang="en">
@@ -168,8 +256,11 @@
             console.error('User input element not found.');
         }
     </script>
+   
 </body>
 </html>
-
+<footer>
+    &copy; 2024 Cure Compass. All rights reserved.
+  </footer>
 </body>
 </html>

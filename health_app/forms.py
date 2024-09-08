@@ -39,3 +39,26 @@ class SymptomSelectionForm(forms.Form):
         widget=forms.CheckboxSelectMultiple,
         label="Select Symptoms"
     )
+
+from django import forms
+
+class MedicalHistoryForm(forms.Form):
+    name = forms.CharField(label='Name', max_length=100)
+    age = forms.IntegerField(label='Age')
+    medical_history = forms.CharField(label='Medical History', widget=forms.Textarea)
+    height = forms.DecimalField(label='Height (in cm)', decimal_places=2, max_digits=5)
+    weight = forms.DecimalField(label='Weight (in kg)', decimal_places=2, max_digits=5)
+    blood_group = forms.ChoiceField(
+        label='Blood Group',
+        choices=[
+            ('A+', 'A+'),
+            ('A-', 'A-'),
+            ('B+', 'B+'),
+            ('B-', 'B-'),
+            ('AB+', 'AB+'),
+            ('AB-', 'AB-'),
+            ('O+', 'O+'),
+            ('O-', 'O-')
+        ]
+    )
+

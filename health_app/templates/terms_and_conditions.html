@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/terms_and_conditions.css' %}">
 </head>
 <div class="container">
-    <h1>Terms and Conditions</h1>
+    <h1>TERMS AND CONDITIONS</h1>
     
     <p>Welcome to Cure Compass. By accessing or using our website, you agree to be bound by the following terms and conditions. Please read them carefully.</p>
     
@@ -29,5 +29,12 @@
 
     <h2>7. Contact Us</h2>
     <p>If you have any questions about these terms and conditions, please contact us at support@curecompass.com.</p>
+<!-- Back to Register Page Link -->
+<!-- Back to Register Page Link -->
+<a href="{% url 'register' %}" class="back-to-register">
+    Back to Register Page
+</a>
+
+    <footer class="footer">&copy; 2024 Cure Compass. All rights reserved.</footer>
 </div>
 {% endblock %}

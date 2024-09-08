@@ -265,3 +265,41 @@ def chat(request):
     return JsonResponse({
         'response': response
     })
+
+
+from django.shortcuts import render
+from .forms import MedicalHistoryForm
+
+def medical_history_view(request):
+    if request.method == 'POST':
+        form = MedicalHistoryForm(request.POST)
+        if form.is_valid():
+            # Process the form data here, for example, saving it to the database
+            name = form.cleaned_data['name']
+            age = form.cleaned_data['age']
+            medical_history = form.cleaned_data['medical_history']
+            # You can redirect to a success page or render the same page with a success message
+            return render(request, 'history_success.html', {'name': name})
+    else:
+        form = MedicalHistoryForm()
+
+    return render(request, 'medical_history.html', {'form': form})
+
+
+
+from django.http import JsonResponse
+
+def capture_location(request):
+    if request.method == 'POST':
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
+        
+        # Save location data to the database (optional)
+        # For example, you could save it to the user's profile
+        if request.user.is_authenticated:
+            request.user.profile.latitude = latitude
+            request.user.profile.longitude = longitude
+            request.user.profile.save()
+        
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'})

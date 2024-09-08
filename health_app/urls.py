@@ -18,8 +18,10 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('initialize_chatbot/', views.initialize_chatbot, name='initialize_chatbot'),
     path('chat/', views.chat, name='chat'),
-
     # path('follow-up/<int:disease_id>/', views.follow_up_questions, name='follow_up'),
-    
+     path('medical-history/', views.medical_history_view, name='medical_history'),
+     path('capture-location/', views.capture_location, name='capture_location'),
 ]
+    
+
 
