@@ -49,38 +49,72 @@
         <button onclick="sendMessage()">Send</button>
     </div>
 
-    <footer>
-        &copy; 2024 Cure Compass. All rights reserved.
-    </footer>
+   
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+</head>
+<body>
+    <!-- Your HTML content -->
+    <div id="chat-messages"></div>
+    <input type="text" id="user-input" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
 
+    <!-- Include your JavaScript -->
     <script>
         let conversationId = null;
 
         function initializeChatbot() {
+            const csrfToken = '{{ csrf_token }}';
+            const predictedDisease = '{{ predicted_disease }}';
+            const symptoms = [{% for symptom in selected_symptoms %}'{{ symptom.name }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+
+            if (!csrfToken || !predictedDisease) {
+                console.error('CSRF token or predicted disease is missing.');
+                return;
+            }
+
             fetch('{% url "initialize_chatbot" %}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
+                    'X-CSRFToken': csrfToken
                 },
                 body: JSON.stringify({
-                    disease: '{{ predicted_disease }}',
-                    symptoms: [{% for symptom in selected_symptoms %}'{{ symptom.name }}'{% if not forloop.last %},{% endif %}{% endfor %}]
+                    disease: predictedDisease,
+                    symptoms: symptoms
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                return response.json();
+            })
             .then(data => {
                 conversationId = data.conversation_id;
                 appendMessage('Bot', data.initial_question);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
             });
         }
 
         function sendMessage() {
-            const userInput = document.getElementById('user-input').value;
+            const userInputElement = document.getElementById('user-input');
+            if (!userInputElement) {
+                console.error('User input element not found.');
+                return;
+            }
+
+            const userInput = userInputElement.value;
             if (userInput.trim() === '') return;
 
             appendMessage('You', userInput);
-            
+
             fetch('{% url "chat" %}', {
                 method: 'POST',
                 headers: {
@@ -92,16 +126,29 @@
                     conversation_id: conversationId
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                return response.json();
+            })
             .then(data => {
                 appendMessage('Bot', data.response);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
             });
-            
-            document.getElementById('user-input').value = '';
+
+            userInputElement.value = '';
         }
 
         function appendMessage(sender, message) {
             const chatMessages = document.getElementById('chat-messages');
+            if (!chatMessages) {
+                console.error('Chat messages element not found.');
+                return;
+            }
+
             chatMessages.innerHTML += `<p><strong>${sender}:</strong> ${message}</p>`;
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
@@ -110,11 +157,19 @@
         window.onload = initializeChatbot;
 
         // Allow sending message with Enter key
-        document.getElementById('user-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
+        const userInputElement = document.getElementById('user-input');
+        if (userInputElement) {
+            userInputElement.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        } else {
+            console.error('User input element not found.');
+        }
     </script>
+</body>
+</html>
+
 </body>
 </html>
