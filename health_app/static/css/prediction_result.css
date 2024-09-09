@@ -67,7 +67,7 @@ li {
 a {
     display: inline-block;
     text-align: center;
-    margin: 20px;
+    margin: 34px;
     padding: 12px 20px;
     background-color: #00796b; /* Teal background for link */
     color: #fff; /* White text color for link */
@@ -82,9 +82,35 @@ a:hover {
 }
 
 footer {
-    position: fixed;
+    position: relative;
+    color: black;
     bottom: 0;
     width: 100%;
     text-align: center;
     padding: 10px;
+}
+
+/* New CSS for personalized button */
+.personalized-button {
+    display: inline-block;
+    padding: 15px 25px;
+    margin: 20px 0;
+    background-color: #9ea3a2; /* Dark teal background */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 18px; /* Slightly larger font size for emphasis */
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.personalized-button:hover {
+    background-color: #003d33; /* Even darker teal on hover */
+    transform: scale(1.05); /* Slightly scale up on hover */
+}
+
+.personalized-button:focus {
+    outline: none; /* Remove outline for a cleaner look */
 }

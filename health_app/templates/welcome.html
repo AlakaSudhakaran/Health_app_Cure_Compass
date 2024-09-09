@@ -12,29 +12,57 @@
     <div class="content-wrapper">
         <div class="welcome-container"> 
             {% if user.is_authenticated %}
-                <!-- Link to Home Page where login/register are visible after logout -->
+                <!-- Welcome message for authenticated user -->
                 <h2>Welcome, {{ user.username }}!</h2>
-                <p>Thank you for logging in. You can now <a href="{% url 'report_symptoms' %}" class="button">report symptoms</a></p>
+                <p>Thank you for logging in. You can now 
+                   <a href="{% url 'report_symptoms' %}" class="button">Report Symptoms</a>
+                </p>
+                
+                <!-- Link to add medical history -->
+                <p><a href="{% url 'medical_history' %}" class="add-history-button">➕ Add Medical History</a></p>
+                
+                
             {% else %}
                 <!-- If user is not authenticated, display login/register links -->
                 <h2>Welcome to Cure Compass!</h2>
-                <p>Please <a href="{% url 'login' %}" class="button">login</a> or <a href="{% url 'register' %}" class="button">register</a></p>
+                <p>Please <a href="{% url 'login' %}" class="button">Login</a> or <a href="{% url 'register' %}" class="button">Register</a></p>
             {% endif %}
-
+            
             <!-- Logout button -->
-    
             <form method="POST" action="{% url 'logout' %}">
                 {% csrf_token %}
-                
-                <button type="submit" class="logout-link">Logout</button>
-                <div>
-                <a href="{% url 'home' %}" class="back-to-home">Back to Home</a>
+                <div class="action-buttons">
+                    <button type="submit" class="logout-link">Logout</button>
+                    <a href="{% url 'home' %}" class="back-to-home">Back to Home</a>
                 </div>
             </form>
         </div>
-
-        <!-- Back to Home Page link -->
-        
     </div>
 </div>
+
+<!-- JavaScript to capture user's location -->
+<script>
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+
+            // Update location status
+            document.getElementById("location-status").innerHTML = "Location captured: Latitude " + latitude + ", Longitude " + longitude;
+
+            // Send location to the backend via AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{% url "capture_location" %}', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');  // Include CSRF token
+
+            var data = 'latitude=' + latitude + '&longitude=' + longitude;
+            xhr.send(data);
+        }, function(error) {
+            document.getElementById("location-status").innerHTML = "Failed to capture location: " + error.message;
+        });
+    } else {
+        document.getElementById("location-status").innerHTML = "Geolocation is not supported by this browser.";
+    }
+</script>
 {% endblock %}

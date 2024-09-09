@@ -1,0 +1,73 @@
+/* Custom Teal Color Theme */
+body {
+    background-color: #f0f8f8; /* Light teal background */
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    background-color: #ffffff; /* White background for the form container */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+/* Heading */
+h2 {
+    color: #004d40; /* Darker teal color for headings */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    color: #004d40; /* Darker teal color for labels */
+    font-weight: bold;
+    display: block;
+}
+
+.form-control {
+    border-color: #004d40; /* Darker teal border color for form controls */
+    border-radius: 4px; /* Rounded corners for form controls */
+}
+
+.form-control:focus {
+    border-color: #00796b; /* Teal border on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 121, 107, 0.25); /* Teal shadow on focus */
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #004d40; /* Darker teal background for buttons */
+    border-color: #00332d; /* Darker border color for buttons */
+    color: #ffffff; /* White text color */
+    border-radius: 4px; /* Rounded corners for buttons */
+    padding: 10px 20px;
+    font-size: 16px;
+    display: block; /* Ensure the button is displayed as a block */
+    width: 100%; /* Full width for better alignment */
+    max-width: 200px; /* Optional: Limit maximum width */
+    margin: 20px auto; /* Center align the button */
+}
+
+.btn-primary:hover {
+    background-color: #00332d; /* Even darker teal on hover */
+    border-color: #00221b; /* Even darker border color on hover */
+}
+
+/* Navigation Link Styles */
+.nav-link {
+    color: #004d40; /* Teal color for links */
+    text-decoration: none; /* Remove underline from links */
+    font-weight: bold;
+    margin: 10px 15px;
+}
+
+.nav-link:hover {
+    color: #00796b; /* Darker teal color on hover */
+    text-decoration: underline; /* Underline on hover */
+}

@@ -94,27 +94,6 @@ p {
     background-color: #5a6268;
 }
 
-/* Home Link Styles */
-.home-link {
-    color: #008080; /* Teal color */
-    text-decoration: none; /* Remove underline */
-    font-size: 1em; /* Adjust font size as needed */
-    font-weight: bold; /* Bold text for emphasis */
-    padding: 0.5em; /* Padding for spacing */
-    transition: color 0.3s; /* Smooth transition for color changes */
-}
-
-.home-link:hover {
-    color: #004d40; /* Darker teal for hover state */
-    text-decoration: underline; /* Add underline on hover for better visibility */
-}
-
-.home-link:focus {
-    outline: none; /* Remove default focus outline */
-    box-shadow: 0 0 0 2px rgba(0, 128, 128, 0.5); /* Teal outline shadow for focus */
-}
-
-
 footer  {
     position: fixed;
     bottom: 0;
@@ -123,24 +102,44 @@ footer  {
     
 }
 
-/* Logout Link Styles */
+
+/* Container for the action buttons */
+.action-buttons {
+    display: flex; /* Use flexbox layout */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    gap: 10px; /* Space between the button and the link */
+    margin-top: 20px; /* Optional: Margin from top to separate from other content */
+}
+
+/* Style for the logout button */
 .logout-link {
     color: #008080; /* Teal color */
-    text-decoration: none; /* Remove underline */
-    font-size: 1em; /* Adjust font size as needed */
-    font-weight: bold; /* Bold text for emphasis */
-    padding: 0.5em; /* Padding for spacing */
-    transition: color 0.3s; /* Smooth transition for color changes */
+    background-color: #f0f0f0; /* Light background color */
+    border: none; /* Remove border */
+    padding: 10px 20px; /* Padding inside the button */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Change cursor to pointer */
 }
-
 .logout-link:hover {
-    color: #004d40; /* Darker teal for hover state */
-    text-decoration: underline; /* Add underline on hover for better visibility */
+    color: #004d40; /* Darker teal on hover */
+    background-color: #e0e0e0; /* Change background color on hover */
 }
 
-.logout-link:focus {
-    outline: none; /* Remove default focus outline */
-    box-shadow: 0 0 0 2px rgba(0, 128, 128, 0.5); /* Teal outline shadow for focus */
+/* Style for the back to home link */
+.back-to-home {
+    color: #008080; /* Teal color */
+    text-decoration: none; /* Remove underline */
+    padding: 10px 15px; /* Padding around the link */
+    background-color: #f0f0f0; /* Light background color */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    display: inline-block; /* Respect padding and background */
+    line-height: 1.5; /* Ensure proper line height */
 }
 
-
+.back-to-home:hover {
+    color: #004d40; /* Darker teal on hover */
+    background-color: #e0e0e0; /* Change background color on hover */
+}

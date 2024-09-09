@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical History</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/medical_history.css' %}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Enter Your Medical History</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.name.label_tag }}<br>
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                {{ form.age.label_tag }}<br>
+                {{ form.age }}
+            </div>
+            <div class="form-group">
+                {{ form.height.label_tag }}<br>
+                {{ form.height }}
+            </div>
+            <div class="form-group">
+                {{ form.weight.label_tag }}<br>
+                {{ form.weight }}
+            </div>
+            <div class="form-group">
+                {{ form.blood_group.label_tag }}<br>
+                {{ form.blood_group }}
+            </div>
+            <div class="form-group">
+                {{ form.medical_history.label_tag }}<br>
+                {{ form.medical_history }}
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+
+        <!-- Navigation Links -->
+        <div class="text-center mt-4">
+            <a href="{% url 'home' %}" class="nav-link">Back to Home</a>
+            <a href="{% url 'welcome' %}" class="nav-link">Back to Welcome Page</a>
+        </div>
+    </div>
+</body>
+</html>

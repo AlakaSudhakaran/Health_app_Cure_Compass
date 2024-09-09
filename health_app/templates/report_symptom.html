@@ -24,9 +24,12 @@
         <button type="button" id="addSymptom">Add Another Symptom</button>
         <button type="submit">Submit</button>
     </div>
+    <!-- Add Medical History link -->
+    <p><a href="{% url 'medical_history' %}" class="add-history-button">➕ Add Medical History</a></p>
+    <!-- Back to Home Page link -->
+    <a href="{% url 'home' %}" class="back-to-home">Back to Home</a>
 
-    <!-- Back to Home Page link below the submit button -->
-    <a href="{% url 'home' %}" class="back-to-home">Back to Home </a>
+    
 </form>
 
 <script>
