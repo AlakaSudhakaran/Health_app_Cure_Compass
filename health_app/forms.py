@@ -5,7 +5,7 @@ from .models import Symptom, UserSymptomReport, CustomUser
 # Define CustomUserCreationForm with additional fields: age, gender, and terms
 class CustomUserCreationForm(UserCreationForm):
     age = forms.IntegerField(required=True, label="Age")
-    gender = forms.ChoiceField(choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], label="Gender")
+    gender = forms.ChoiceField(choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], label="Gender")
     terms = forms.BooleanField(required=True, label="Agree to terms and conditions")  # Checkbox for terms
 
     class Meta(UserCreationForm.Meta):

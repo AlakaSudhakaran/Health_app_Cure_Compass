@@ -3,8 +3,15 @@ from django.db import models
 from django.conf import settings
 
 class CustomUser(AbstractUser):
-	email = models.EmailField(unique=True)
-	
+    email = models.EmailField(unique=True)
+    age = models.IntegerField(null=True, blank=True)  # Add age field
+    gender = models.CharField(
+        max_length=10, 
+        choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], 
+        null=True, 
+        blank=True
+    )  # Add gender field
+
 class Symptom(models.Model):
     name = models.CharField(max_length=100, unique=True)
     
@@ -39,15 +46,20 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
 from django.db import models
 
 class Conversation(models.Model):
     disease = models.CharField(max_length=100)
     context = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    global_id = models.IntegerField(unique=True, blank=True, null=True)
 
-    def __str__(self):
-        return f"Conversation about {self.disease} (ID: {self.id})"
-    
-  
+    @classmethod
+    def get_next_global_id(cls):
+        max_global_id = cls.objects.aggregate(max_id=models.Max('global_id'))['max_id']
+        return (max_global_id or 0) + 1
+
+    def save(self, *args, **kwargs):
+        if self.global_id is None:
+            self.global_id = self.get_next_global_id()
+        super().save(*args, **kwargs)

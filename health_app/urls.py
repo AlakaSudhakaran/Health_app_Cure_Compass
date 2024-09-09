@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 from .views import predict_disease
-
+from django.urls import path
+from .views import generate_report
 urlpatterns = [
     path('', views.home, name='home'),
     path('register/', views.register, name='register'),
@@ -18,8 +19,7 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('initialize_chatbot/', views.initialize_chatbot, name='initialize_chatbot'),
     path('chat/', views.chat, name='chat'),
-
-    # path('follow-up/<int:disease_id>/', views.follow_up_questions, name='follow_up'),
+    path('report/<int:global_id>/', views.generate_report, name='generate_report'),# path('follow-up/<int:disease_id>/', views.follow_up_questions, name='follow_up'),
     
 ]
 

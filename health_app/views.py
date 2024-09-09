@@ -121,33 +121,38 @@ def predict_disease(request, report_id):
     if request.method == 'POST':
         selected_symptom_ids = request.POST.getlist('symptoms')
         
-        # Check if enough symptoms are selected
         if len(selected_symptom_ids) < 3:
             return render(request, 'insufficient_symptoms.html')
 
         try:
-            # Create the symptom vector
             symptom_vector = create_symptom_vector(selected_symptom_ids)
             if symptom_vector is None:
                 return render(request, 'error.html', {'message': "Invalid symptom vector."})
 
-            # Call the prediction function
             predicted_disease = make_prediction(symptom_vector)
+
+            # Create a new Conversation instance
+            new_conversation = Conversation.objects.create(
+                disease=predicted_disease,
+                context=json.dumps({
+                    'responses': [symptom.name for symptom in Symptom.objects.filter(id__in=selected_symptom_ids)],
+                    'probability': 0.5  # You might want to get this from your prediction model
+                })
+            )
 
             # Render the prediction result
             return render(request, 'prediction_result.html', {
                 'predicted_disease': predicted_disease,
-                'selected_symptoms': Symptom.objects.filter(id__in=selected_symptom_ids)
+                'selected_symptoms': Symptom.objects.filter(id__in=selected_symptom_ids),
+                'conversation_id': new_conversation.global_id  # Use global_id here
             })
         except Exception as e:
             print(f"Error in disease prediction: {e}")
             print(traceback.format_exc())
             return render(request, 'prediction_error.html', {'error': str(e)})
     else:
-        # If GET request, display the symptoms associated with the report
         symptoms = report.symptoms.all()
         return render(request, 'predict_disease.html', {'report': report, 'symptoms': symptoms})
-
 @login_required
 def view_report(request, report_id):
     report = get_object_or_404(UserSymptomReport, id=report_id)
@@ -265,3 +270,60 @@ def chat(request):
     return JsonResponse({
         'response': response
     })
+from django.shortcuts import render, get_object_or_404
+from .models import Conversation, CustomUser, Disease, Symptom
+import json
+import logging
+
+logger = logging.getLogger(__name__)
+
+def get_conversation(global_id):
+    try:
+        conversation = Conversation.objects.get(global_id=global_id)
+        return conversation
+    except Conversation.DoesNotExist:
+        logger.error(f"Conversation with global ID {global_id} does not exist.")
+        return None
+
+def generate_report(request, global_id):
+    try:
+        conversation = get_object_or_404(Conversation, global_id=global_id)
+        user = request.user
+        
+        
+
+        # Retrieve disease and context information
+        disease = conversation.disease
+        context = json.loads(conversation.context)
+        responses = context.get('responses', [])
+        probability = context.get('probability', 0) * 100  # Ensure this reflects the chatbot's output accurately
+
+        # Fetch disease description from the Disease model
+        disease_obj = Disease.objects.filter(name=disease).first()
+        disease_description = disease_obj.description if disease_obj else "No description available"
+
+        # Fetch user details
+        user = request.user
+        name = user.get_full_name() or user.username
+        age = user.age
+        gender = user.gender
+
+        # Prepare data for the report
+        report_data = {
+            'global_id': conversation.global_id,
+            'disease': disease,
+            'probability': f"{probability:.2f}%",
+            'symptoms': responses,
+            'description': disease_description,
+            'next_steps': "Please consult a healthcare provider for further advice.",
+            'name': name,
+            'age': age,
+            'gender': gender,
+        }
+
+        return render(request, 'final_report.html', report_data)
+    
+    except Exception as e:
+        logger.error(f"Error generating report for global_id {global_id}: {e}")
+        return render(request, 'error.html', {'message': 'An error occurred while generating the report.'})
+

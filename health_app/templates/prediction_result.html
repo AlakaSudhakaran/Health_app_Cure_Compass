@@ -49,6 +49,12 @@
         <button onclick="sendMessage()">Send</button>
     </div>
 
+    <!-- Report Generation Link -->
+    <div class="report-link" style="text-align: center; margin-top: 20px;">
+        <a href="{% url 'generate_report' global_id=conversation_id %}">Generate Report</a>
+
+    </div>
+
     <footer>
         &copy; 2024 Cure Compass. All rights reserved.
     </footer>

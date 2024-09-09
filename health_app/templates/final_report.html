@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Disease Prediction Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; }
+        .section { margin-bottom: 20px; }
+        .personal-info { background-color: #ecf0f1; padding: 10px; border-radius: 5px; }
+        .button-container { margin-top: 20px; }
+        button { 
+            padding: 10px 20px; 
+            background-color: #3498db; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+        button:hover { background-color: #2980b9; }
+    </style>
+</head>
+<body>
+    <h1>Disease Prediction Report</h1>
+
+    <!-- User Information Section -->
+    <div class="section personal-info">
+        <h2>Patient Information</h2>
+        <p><strong>Name:</strong> {{ name }}</p>
+        <p><strong>Age:</strong> {{ age }}</p>
+        <p><strong>Gender:</strong> {{ gender }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Predicted Disease</h2>
+        <p>{{ disease }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Probability</h2>
+        <p>{{ probability }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Major Symptoms</h2>
+        <ul>
+            {% for symptom in symptoms %}
+                <li>{{ symptom }}</li>
+            {% empty %}
+                <li>No symptoms recorded.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Disease Description</h2>
+        <p>{{ description }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Next Steps</h2>
+        <p>{{ next_steps }}</p>
+    </div>
+
+    <div class="button-container">
+        <button onclick="window.print()">Print Report</button>
+    </div>
+</body>
+</html>
