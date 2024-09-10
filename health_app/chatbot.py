@@ -1,16 +1,17 @@
 import os
 import pandas as pd
 import math
-
+import json
 class Chatbot:
-    def __init__(self, disease, context=None):
+    def __init__(self, disease, context=None, conversation=None):
         self.disease = disease
         self.context = context if context else {}
         self.questions_df = self.load_questions()
         self.responses = self.context.get('responses', [])
         self.current_question_index = self.context.get('current_question_index', 0)
         self.base_probability = 0.5  # Starting probability
-
+        self.conversation = conversation 
+        self.base_probability = 0.5 
     def load_questions(self):
         csv_file_path = os.path.join(os.path.dirname(__file__), 'disease_followup_question.csv')
         try:
@@ -63,8 +64,17 @@ class Chatbot:
             return "Insufficient responses to validate the disease."
 
         try:
+        # Calculate the probability
             probability = self.calculate_probability()
-            
+
+            if self.conversation:  # Check if conversation exists
+            # Update the context of the conversation with the correct probability
+                context = json.loads(self.conversation.context)  # Load existing context
+                context['probability'] = probability  # Update context with the new probability
+                self.conversation.context = json.dumps(context)  # Serialize back to JSON
+                self.conversation.save()  # Save changes to the Conversation model
+
+        # Determine the message based on the probability
             if probability > 0.8:
                 return f"Based on your responses, the predicted disease '{self.disease}' is likely confirmed with a probability of {probability:.2f}."
             elif probability > 0.5:

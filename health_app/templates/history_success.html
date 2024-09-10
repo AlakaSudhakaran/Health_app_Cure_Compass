@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical History Success</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; }
+        .message { background-color: #ecf0f1; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Medical History Submitted Successfully</h1>
+    <div class="message">
+        <p>Thank you, {{ name }}. Your medical history has been recorded successfully.</p>
+    </div>
+    <a href="{% url 'report_symptoms' %}">Go back</a>
+</body>
+</html>

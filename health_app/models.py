@@ -63,3 +63,36 @@ class Conversation(models.Model):
         if self.global_id is None:
             self.global_id = self.get_next_global_id()
         super().save(*args, **kwargs)
+# models.py
+from django.db import models
+
+class DiseaseDescription(models.Model):
+    disease_name = models.CharField(max_length=255, unique=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.disease_name
+from django.db import models
+from django.contrib.auth.models import User
+
+class MedicalHistory(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    height = models.FloatField(default=170.0)  # You might want to use specific units, e.g., centimeters
+    weight = models.FloatField(default=70.0) 
+    age = models.IntegerField()
+    history = models.TextField()  # For medical history details
+    blood_group = models.CharField(max_length=3, choices=[
+        ('A+', 'A+'),
+        ('A-', 'A-'),
+        ('B+', 'B+'),
+        ('B-', 'B-'),
+        ('AB+', 'AB+'),
+        ('AB-', 'AB-'),
+        ('O+', 'O+'),
+        ('O-', 'O-')
+    ],
+    default='O+'
+    )
+    def __str__(self):
+        return f"{self.name}'s Medical History"

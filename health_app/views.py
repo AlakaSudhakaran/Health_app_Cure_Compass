@@ -285,40 +285,73 @@ def get_conversation(global_id):
         logger.error(f"Conversation with global ID {global_id} does not exist.")
         return None
 
+from django.shortcuts import render, get_object_or_404
+from health_app.models import Conversation, Disease
+import json
+import logging
+
+logger = logging.getLogger(__name__)
+
+# views.py
 def generate_report(request, global_id):
     try:
+        # Retrieve conversation object
         conversation = get_object_or_404(Conversation, global_id=global_id)
-        user = request.user
         
+        # Retrieve and normalize disease name
+        disease = conversation.disease.strip().lower()
+        logger.debug(f"Normalized Disease from conversation: '{disease}'")
         
+        # Extract context and handle potential issues
+        try:
+            context = json.loads(conversation.context)
+        except json.JSONDecodeError as json_error:
+            logger.error(f"Failed to parse context for global_id {global_id}: {json_error}")
+            context = {}  # Fallback to an empty context
 
-        # Retrieve disease and context information
-        disease = conversation.disease
-        context = json.loads(conversation.context)
+        # Extract responses and probability from context, with safe defaults
         responses = context.get('responses', [])
-        probability = context.get('probability', 0) * 100  # Ensure this reflects the chatbot's output accurately
+        probability = context.get('probability', 0) * 100  # Default to 0 if missing
 
-        # Fetch disease description from the Disease model
-        disease_obj = Disease.objects.filter(name=disease).first()
-        disease_description = disease_obj.description if disease_obj else "No description available"
+        # Fetch disease description from the Disease model with case-insensitive match
+        disease_obj = Disease.objects.filter(name__iexact=disease).first()
+        
+        # Debugging: Print or log the disease name and object
+        if not disease_obj:
+            logger.warning(f"Disease '{disease}' not found in the database.")
+            print(f"Disease '{disease}' not found in the database.")  # For debugging
+        else:
+            logger.info(f"Found disease: '{disease_obj.name}' with description.")
+        
+        disease_description = disease_obj.description if disease_obj else "No description available."
 
-        # Fetch user details
+        # Fetch medical history details
+        medical_history_obj = MedicalHistory.objects.filter(user=request.user).first()
+        medical_history_details = medical_history_obj.history if medical_history_obj else "No medical history available."
+        
         user = request.user
         name = user.get_full_name() or user.username
         age = user.age
         gender = user.gender
-
+        blood_group = medical_history_obj.blood_group if medical_history_obj else "Not provided"
+        height = medical_history_obj.height if medical_history_obj else "Not provided"
+        weight = medical_history_obj.weight if medical_history_obj else "Not provided"
+        
         # Prepare data for the report
         report_data = {
             'global_id': conversation.global_id,
-            'disease': disease,
+            'disease': disease.capitalize(),  # Capitalize for display
             'probability': f"{probability:.2f}%",
             'symptoms': responses,
             'description': disease_description,
+            'medical_history': medical_history_details,
             'next_steps': "Please consult a healthcare provider for further advice.",
             'name': name,
             'age': age,
             'gender': gender,
+            'blood_group': blood_group,
+            'height': height,
+            'weight': weight,
         }
 
         return render(request, 'final_report.html', report_data)
@@ -327,24 +360,32 @@ def generate_report(request, global_id):
         logger.error(f"Error generating report for global_id {global_id}: {e}")
         return render(request, 'error.html', {'message': 'An error occurred while generating the report.'})
 
-
 from django.shortcuts import render
 from .forms import MedicalHistoryForm
-
+from health_app.models import MedicalHistory
+# views.py
 def medical_history_view(request):
     if request.method == 'POST':
         form = MedicalHistoryForm(request.POST)
         if form.is_valid():
-            # Process the form data here, for example, saving it to the database
             name = form.cleaned_data['name']
             age = form.cleaned_data['age']
             medical_history = form.cleaned_data['medical_history']
-            # You can redirect to a success page or render the same page with a success message
+            
+            # Save or update medical history for the logged-in user
+            user = request.user
+            medical_history_obj, created = MedicalHistory.objects.update_or_create(
+                user=user,
+                defaults={'name': name, 'age': age, 'history': medical_history}
+            )
+            form.save()
+            # Redirect to a success page or render the same page with a success message
             return render(request, 'history_success.html', {'name': name})
     else:
         form = MedicalHistoryForm()
 
     return render(request, 'medical_history.html', {'form': form})
+
 
 
 
